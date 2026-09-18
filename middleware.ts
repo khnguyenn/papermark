@@ -24,8 +24,17 @@ function isAnalyticsPath(path: string) {
 // dataroom handler, so /login on papermark.example.com rendered a spinner.
 // NEXT_PUBLIC_APP_BASE_HOST is inlined at build time; NEXTAUTH_URL is read at
 // runtime, so a prebuilt image still gets the right answer.
+function hostnameOf(host: string) {
+  // Strip an optional port, keeping a bracketed IPv6 literal such as
+  // `[2001:db8::1]` intact so it matches `new URL(...).hostname`.
+  return host
+    .match(/^(\[[^\]]*\]|[^:]+)/)?.[1]
+    ?.toLowerCase()
+    .trim();
+}
+
 function isConfiguredAppHost(host: string) {
-  const hostname = host.split(":")[0]?.toLowerCase().trim();
+  const hostname = hostnameOf(host);
   const appHosts = [
     process.env.NEXT_PUBLIC_APP_BASE_HOST?.toLowerCase().trim(),
   ];
