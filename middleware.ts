@@ -19,11 +19,6 @@ function isAnalyticsPath(path: string) {
   return pattern.test(path);
 }
 
-// Hosts a self-hosted instance serves the app itself on. Without this every
-// host outside the papermark.com list was routed to the custom-domain
-// dataroom handler, so /login on papermark.example.com rendered a spinner.
-// NEXT_PUBLIC_APP_BASE_HOST is inlined at build time; NEXTAUTH_URL is read at
-// runtime, so a prebuilt image still gets the right answer.
 function hostnameOf(host: string) {
   // Strip an optional port, keeping a bracketed IPv6 literal such as
   // `[2001:db8::1]` intact so it matches `new URL(...).hostname`.
@@ -33,6 +28,11 @@ function hostnameOf(host: string) {
     .trim();
 }
 
+// Hosts a self-hosted instance serves the app itself on. Without this every
+// host outside the papermark.com list was routed to the custom-domain
+// dataroom handler, so /login on papermark.example.com rendered a spinner.
+// NEXT_PUBLIC_APP_BASE_HOST is inlined at build time; NEXTAUTH_URL is read at
+// runtime, so a prebuilt image still gets the right answer.
 function isConfiguredAppHost(host: string) {
   const hostname = hostnameOf(host);
   const appHosts = [
